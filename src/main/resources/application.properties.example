@@ -16,6 +16,15 @@ spring.jpa.properties.hibernate.dialect=org.hibernate.dialect.MySQL8Dialect
 # Logging Configuration
 logging.level.org.springframework.transaction=DEBUG
 logging.level.org.hibernate=DEBUG
+logging.level.root=INFO
+
+# Spring Security
+spring.security.user.name=<your_username>
+spring.security.user.password=<your_password>
+
+# JWT Configuration
+jwt.secret=<your_jwt_secret>
+jwt.expiration=86400000
 
 # SpringDoc Configuration
 springdoc.api-docs.enabled=true

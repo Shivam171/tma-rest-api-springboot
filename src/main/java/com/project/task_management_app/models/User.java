@@ -1,10 +1,9 @@
 package com.project.task_management_app.models;
 
-import com.project.task_management_app.enums.TaskPriority;
-import com.project.task_management_app.enums.TaskStatus;
+import com.project.task_management_app.enums.Role;
 import jakarta.persistence.*;
+import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotBlank;
-import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Size;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -14,6 +13,7 @@ import org.hibernate.annotations.CreationTimestamp;
 import org.hibernate.annotations.UpdateTimestamp;
 
 import java.time.LocalDateTime;
+import java.util.List;
 import java.util.UUID;
 
 @Entity
@@ -21,33 +21,31 @@ import java.util.UUID;
 @NoArgsConstructor
 @Getter
 @Setter
-@Table(name = "tasks")
-public class Task {
+@Table(name = "users",
+        uniqueConstraints = {
+                @UniqueConstraint(columnNames = "username"),
+                @UniqueConstraint(columnNames = "email")
+        })
+public class User {
     @Id
     @GeneratedValue(strategy = GenerationType.UUID)
     private UUID id;
 
-    @Column(nullable = false, unique = true)
+    private String userImgUrl;
+
     @NotBlank
-    private String title;
+    @Size(max = 20)
+    private String username;
 
-    @Size(max = 500)
-    private String description;
+    @NotBlank
+    @Email
+    private String email;
 
-    @NotNull
+    @NotBlank
+    private String password;
+
     @Enumerated(EnumType.STRING)
-    private TaskStatus status;
-
-    @NotNull
-    @Enumerated(EnumType.STRING)
-    private TaskPriority priority;
-
-    private String category;
-
-    private String attachmentUrl;
-
-    @NotNull
-    private LocalDateTime dueDate;
+    private Role role;
 
     @CreationTimestamp
     private LocalDateTime createdAt;
@@ -55,7 +53,9 @@ public class Task {
     @UpdateTimestamp
     private LocalDateTime updatedAt;
 
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "user_id", nullable = false)
-    private User user;
+    @OneToMany(mappedBy = "user",
+            cascade = CascadeType.ALL,
+            fetch = FetchType.LAZY,
+            orphanRemoval = true)
+    private List<Task> tasks;
 }

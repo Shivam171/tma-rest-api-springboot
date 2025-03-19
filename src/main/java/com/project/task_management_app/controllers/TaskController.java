@@ -7,6 +7,7 @@ import com.project.task_management_app.payload.Request.UpdateTaskRequest;
 import com.project.task_management_app.payload.Response.APIResponse;
 import com.project.task_management_app.payload.Response.TaskResponse;
 import com.project.task_management_app.services.TaskService;
+import com.project.task_management_app.services.UserDetailsImpl;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.media.Content;
@@ -18,6 +19,7 @@ import jakarta.validation.constraints.Min;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
@@ -75,10 +77,11 @@ public class TaskController {
     @Operation(summary = "Create a new task", description = "Adds a new task to the system")
     @ApiResponse(responseCode = "201", description = "Task created successfully")
     public ResponseEntity<APIResponse<TaskResponse>> createTask(
+            @AuthenticationPrincipal UserDetailsImpl userDetails,
             @Valid @RequestBody
             @io.swagger.v3.oas.annotations.parameters.RequestBody(description = "Task details") CreateTaskRequest request) {
 
-        APIResponse<TaskResponse> response = taskService.createTask(request);
+        APIResponse<TaskResponse> response = taskService.createTask(userDetails, request);
         return new ResponseEntity<>(response, HttpStatus.CREATED);
     }
 
@@ -92,11 +95,11 @@ public class TaskController {
     public ResponseEntity<APIResponse<TaskResponse>> updateTask(
             @PathVariable
             @Parameter(description = "UUID of the task to update") UUID taskId,
-
+            @AuthenticationPrincipal UserDetailsImpl userDetails,
             @Valid @RequestBody
             @io.swagger.v3.oas.annotations.parameters.RequestBody(description = "Updated task details") UpdateTaskRequest request) {
 
-        APIResponse<TaskResponse> response = taskService.updateTask(taskId, request);
+        APIResponse<TaskResponse> response = taskService.updateTask(userDetails, taskId, request);
         return new ResponseEntity<>(response, HttpStatus.OK);
     }
 

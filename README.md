@@ -1,6 +1,6 @@
 # Task Management App (Rest API)
 
-Task Management App is a simple task management app that allows users to create, read, update, and delete tasks.
+Task Management App is a simple task management app that allows users to create, read, update, and delete tasks with secure authentication and pagination, sorting, and searching.
 
 `Note`: In `src/main
 /resources` directory there is a `application.properties.example` file, rename it to `application.properties` and configure before running the application.
@@ -10,6 +10,8 @@ Task Management App is a simple task management app that allows users to create,
 - Create, read, update, and delete tasks
 - Pagination, sorting and searching tasks
 - Best practices for REST API development
+- Spring Security with JWT for authentication
+- Secured API endpoints with proper error handling
 - Modular architecture (Controller, Service, Repository, etc.)
 
 ### ⚙️ Technologies
@@ -24,6 +26,8 @@ Task Management App is a simple task management app that allows users to create,
 - Spring Validation
 - Spring MySQL Connector
 - Spring Lombok
+- Spring Security
+- JWT
 - Spring Test
 - OpenAPI Swagger
 - Lombok
@@ -58,10 +62,18 @@ Task Management App is a simple task management app that allows users to create,
    ```
 3. Access the Swagger UI at http://localhost:8080/swagger-ui.html
    
+4. Stop the container
+   ```
+      docker stop <container_name or container_id>
+   ```
+5. Remove the container
+   ```
+      docker rm <container_name or container_id>
+   ```
+`Note`: You can add multiple container names or IDs separated by spaces.
 
 ### 💁🏻‍♂️ Things to Improve
 
-- Add security (JWT, OAuth, etc.)
 - Add unit tests
 - Add integration tests
 - Add caching (Redis, Memcached, etc.)

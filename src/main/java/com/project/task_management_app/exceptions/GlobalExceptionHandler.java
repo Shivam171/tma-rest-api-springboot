@@ -106,4 +106,21 @@ public class GlobalExceptionHandler {
 
         return new ResponseEntity<>(response, HttpStatus.INTERNAL_SERVER_ERROR);
     }
+
+    // Handle Access Denied Exception
+    @ExceptionHandler(AccessDeniedException.class)
+    public ResponseEntity<APIResponse<Object>> handleAccessDeniedException(
+            AccessDeniedException ex,
+            HttpServletRequest request) {
+
+        APIResponse<Object> response = new APIResponse<>();
+        response.setSuccess(false);
+        response.setMessage(ex.getMessage());
+        response.setStatusCode(HttpStatus.FORBIDDEN.value());
+        response.setPath(request.getRequestURI());
+        response.setTimestamp(LocalDateTime.now().format(DATE_FORMATTER));
+
+        return new ResponseEntity<>(response, HttpStatus.FORBIDDEN);
+    }
+
 }

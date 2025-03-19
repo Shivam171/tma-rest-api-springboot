@@ -2,17 +2,20 @@ package com.project.task_management_app.services;
 
 import com.project.task_management_app.enums.TaskPriority;
 import com.project.task_management_app.enums.TaskStatus;
+import com.project.task_management_app.exceptions.AccessDeniedException;
 import com.project.task_management_app.exceptions.InvalidRequestException;
 import com.project.task_management_app.exceptions.ResourceNotFoundException;
 import com.project.task_management_app.exceptions.TaskAlreadyExistsException;
 import com.project.task_management_app.mapper.TaskMapper;
 import com.project.task_management_app.models.Task;
+import com.project.task_management_app.models.User;
 import com.project.task_management_app.payload.Request.CreateTaskRequest;
 import com.project.task_management_app.payload.Request.UpdateTaskRequest;
 import com.project.task_management_app.payload.Response.APIResponse;
 import com.project.task_management_app.payload.Response.TaskResponse;
 import com.project.task_management_app.repositories.TaskRepository;
 
+import com.project.task_management_app.repositories.UserRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
@@ -32,6 +35,9 @@ import static com.project.task_management_app.mapper.TaskMapper.mapToTaskRespons
 public class TaskService {
     @Autowired
     private final TaskRepository taskRepository;
+
+    @Autowired
+    private final UserRepository userRepository;
 
     // Get all tasks
     public APIResponse<List<TaskResponse>> getAllTasks(
@@ -82,7 +88,11 @@ public class TaskService {
     }
 
     // Create task
-    public APIResponse<TaskResponse> createTask(CreateTaskRequest request) {
+    public APIResponse<TaskResponse> createTask(UserDetailsImpl userDetails, CreateTaskRequest request) {
+
+        User user = userRepository.findById(userDetails.getId())
+                .orElseThrow(() -> new ResourceNotFoundException("User not found with id: " + userDetails.getId()));
+
         // Check if task with same title already exists
         Optional<Task> existingTask = taskRepository.findByTitle(request.getTitle());
         if (existingTask.isPresent()) {
@@ -99,6 +109,7 @@ public class TaskService {
         task.setDueDate(request.getDueDate());
         task.setCreatedAt(LocalDateTime.now());
         task.setUpdatedAt(LocalDateTime.now());
+        task.setUser(user);
 
         Task savedTask = taskRepository.save(task);
 
@@ -115,9 +126,18 @@ public class TaskService {
     }
 
     // Update task
-    public APIResponse<TaskResponse> updateTask(UUID taskId, UpdateTaskRequest request) {
+    public APIResponse<TaskResponse> updateTask(UserDetailsImpl userDetails, UUID taskId, UpdateTaskRequest request) {
+
+        User user = userRepository.findById(userDetails.getId())
+                .orElseThrow(() -> new ResourceNotFoundException("User not found with id: " + userDetails.getId()));
+
         Task task = taskRepository.findById(taskId)
                 .orElseThrow(() -> new ResourceNotFoundException("Task not found with id: " + taskId));
+
+        // Ensure that the logged-in user is the task owner
+        if (!task.getUser().getId().equals(user.getId())) {
+            throw new AccessDeniedException("You are not authorized to update this task");
+        }
 
         // Check if title is being changed and if new title already exists
         if (request.getTitle() != null && !task.getTitle().equals(request.getTitle())) {
