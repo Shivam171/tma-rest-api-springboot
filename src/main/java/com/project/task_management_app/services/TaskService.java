@@ -205,6 +205,86 @@ public class TaskService {
         return response;
     }
 
+    // Get tasks by status
+    public APIResponse<List<TaskResponse>> getTasksByStatus(TaskStatus status) {
+        List<Task> tasks = taskRepository.findByStatus(status);
+
+        List<TaskResponse> taskResponses = tasks.stream()
+                .map(TaskMapper::mapToTaskResponse)
+                .toList();
+
+        APIResponse<List<TaskResponse>> response = new APIResponse<>();
+        response.setData(taskResponses);
+        response.setSuccess(true);
+        response.setStatusCode(200);
+        response.setMethod("GET");
+        response.setMessage("Tasks with status " + status + " retrieved successfully");
+        response.setPath("/api/v1/tasks/status/" + status);
+        response.setTimestamp(String.valueOf(LocalDateTime.now()));
+
+        return response;
+    }
+
+    // Get tasks by priority
+    public APIResponse<List<TaskResponse>> getTasksByPriority(TaskPriority priority) {
+        List<Task> tasks = taskRepository.findByPriority(priority);
+
+        List<TaskResponse> taskResponses = tasks.stream()
+                .map(TaskMapper::mapToTaskResponse)
+                .toList();
+
+        APIResponse<List<TaskResponse>> response = new APIResponse<>();
+        response.setData(taskResponses);
+        response.setSuccess(true);
+        response.setStatusCode(200);
+        response.setMethod("GET");
+        response.setMessage("Tasks with priority " + priority + " retrieved successfully");
+        response.setPath("/api/v1/tasks/priority/" + priority);
+        response.setTimestamp(String.valueOf(LocalDateTime.now()));
+
+        return response;
+    }
+
+    // Get tasks by category
+    public APIResponse<List<TaskResponse>> getTasksByCategory(String category) {
+        List<Task> tasks = taskRepository.findByCategory(category);
+
+        List<TaskResponse> taskResponses = tasks.stream()
+                .map(TaskMapper::mapToTaskResponse)
+                .toList();
+
+        APIResponse<List<TaskResponse>> response = new APIResponse<>();
+        response.setData(taskResponses);
+        response.setSuccess(true);
+        response.setStatusCode(200);
+        response.setMethod("GET");
+        response.setMessage("Tasks with category '" + category + "' retrieved successfully");
+        response.setPath("/api/v1/tasks/category/" + category);
+        response.setTimestamp(String.valueOf(LocalDateTime.now()));
+
+        return response;
+    }
+
+    // Get recent tasks
+    public APIResponse<List<TaskResponse>> getRecentTasks() {
+        List<Task> tasks = taskRepository.findRecentTasks();
+
+        List<TaskResponse> taskResponses = tasks.stream()
+                .map(TaskMapper::mapToTaskResponse)
+                .toList();
+
+        APIResponse<List<TaskResponse>> response = new APIResponse<>();
+        response.setData(taskResponses);
+        response.setSuccess(true);
+        response.setStatusCode(200);
+        response.setMethod("GET");
+        response.setMessage("Recent tasks retrieved successfully");
+        response.setPath("/api/v1/tasks/recent");
+        response.setTimestamp(String.valueOf(LocalDateTime.now()));
+
+        return response;
+    }
+
     // Search Tasks
     public APIResponse<List<TaskResponse>> searchTasks(String title, String status, String priority,
                                                        String category, LocalDateTime fromDate, LocalDateTime toDate,

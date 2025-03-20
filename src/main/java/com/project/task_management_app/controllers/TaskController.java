@@ -118,6 +118,51 @@ public class TaskController {
         return new ResponseEntity<>(response, HttpStatus.OK);
     }
 
+    // Get tasks by status
+    @GetMapping("/status/{status}")
+    @Operation(summary = "Get tasks by status", description = "Retrieve all tasks with a specific status")
+    @ApiResponse(responseCode = "200", description = "Successfully retrieved tasks")
+    public ResponseEntity<APIResponse<List<TaskResponse>>> getTasksByStatus(
+            @PathVariable
+            @Parameter(description = "Status of the tasks to retrieve", example = "TODO") TaskStatus status) {
+
+        APIResponse<List<TaskResponse>> response = taskService.getTasksByStatus(status);
+        return new ResponseEntity<>(response, HttpStatus.OK);
+    }
+
+    // Get tasks by priority
+    @GetMapping("/priority/{priority}")
+    @Operation(summary = "Get tasks by priority", description = "Retrieve all tasks with a specific priority")
+    @ApiResponse(responseCode = "200", description = "Successfully retrieved tasks")
+    public ResponseEntity<APIResponse<List<TaskResponse>>> getTasksByPriority(
+            @PathVariable
+            @Parameter(description = "Priority of the tasks to retrieve", example = "HIGH") TaskPriority priority) {
+
+        APIResponse<List<TaskResponse>> response = taskService.getTasksByPriority(priority);
+        return new ResponseEntity<>(response, HttpStatus.OK);
+    }
+
+    // Get tasks by category
+    @GetMapping("/category/{category}")
+    @Operation(summary = "Get tasks by category", description = "Retrieve all tasks in a specific category")
+    @ApiResponse(responseCode = "200", description = "Successfully retrieved tasks")
+    public ResponseEntity<APIResponse<List<TaskResponse>>> getTasksByCategory(
+            @PathVariable
+            @Parameter(description = "Category of the tasks to retrieve", example = "Work") String category) {
+
+        APIResponse<List<TaskResponse>> response = taskService.getTasksByCategory(category);
+        return new ResponseEntity<>(response, HttpStatus.OK);
+    }
+
+    // Get recent tasks
+    @GetMapping("/recent")
+    @Operation(summary = "Get recent tasks", description = "Retrieve 5 most recently created tasks")
+    @ApiResponse(responseCode = "200", description = "Successfully retrieved recent tasks")
+    public ResponseEntity<APIResponse<List<TaskResponse>>> getRecentTasks() {
+        APIResponse<List<TaskResponse>> response = taskService.getRecentTasks();
+        return new ResponseEntity<>(response, HttpStatus.OK);
+    }
+
     // Search Tasks
     @GetMapping("/search")
     @Operation(summary = "Search tasks", description = "Search tasks based on filters like title, status, priority, category, and date range with pagination.")

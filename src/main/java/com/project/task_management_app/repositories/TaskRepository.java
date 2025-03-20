@@ -38,4 +38,7 @@ public interface TaskRepository extends JpaRepository<Task, UUID> {
             @Param("fromDate") LocalDateTime fromDate,
             @Param("toDate") LocalDateTime toDate,
             Pageable pageable);
+
+    @Query(value = "SELECT * FROM tasks ORDER BY created_at DESC LIMIT 5", nativeQuery = true)
+    List<Task> findRecentTasks();
 }
