@@ -7,6 +7,7 @@ import lombok.Getter;
 import lombok.Setter;
 
 import java.time.LocalDateTime;
+import java.util.Set;
 import java.util.UUID;
 
 @Getter
@@ -23,4 +24,7 @@ public class TaskResponse{
     private final LocalDateTime dueDate;
     private final LocalDateTime createdAt;
     private final LocalDateTime updatedAt;
+    private final UUID workspaceId;
+    private final UserResponse createdBy;
+    private final Set<TaskAssigneeResponse> assignees;
 }

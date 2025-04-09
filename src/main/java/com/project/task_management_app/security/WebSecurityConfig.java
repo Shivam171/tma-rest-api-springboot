@@ -79,7 +79,7 @@ public class WebSecurityConfig {
                         .requestMatchers(AUTH_WHITELIST).permitAll()
                         .requestMatchers("/api/v1/auth/**").permitAll()
                         .requestMatchers("/api/v1/users/**").authenticated()
-                        .requestMatchers("/api/v1/tasks/**").authenticated()
+                        .requestMatchers("/api/v1/workspaces/**").authenticated()
                         .anyRequest().denyAll()
                 );
 

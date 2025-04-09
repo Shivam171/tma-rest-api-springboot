@@ -10,6 +10,7 @@ import lombok.RequiredArgsConstructor;
 import lombok.Setter;
 
 import java.time.LocalDateTime;
+import java.util.Set;
 import java.util.UUID;
 
 @Getter
@@ -34,4 +35,9 @@ public class CreateTaskRequest {
 
     @NotNull(message = "Due date cannot be null")
     private LocalDateTime dueDate;
+
+    @NotNull(message = "Workspace ID is required")
+    private UUID workspaceId;
+
+    private Set<UUID> assigneeIds; // Optional list of user IDs to assign the task to
 }

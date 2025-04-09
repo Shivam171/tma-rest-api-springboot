@@ -14,8 +14,7 @@ import org.hibernate.annotations.CreationTimestamp;
 import org.hibernate.annotations.UpdateTimestamp;
 
 import java.time.LocalDateTime;
-import java.util.List;
-import java.util.UUID;
+import java.util.*;
 
 @Entity
 @AllArgsConstructor
@@ -59,5 +58,19 @@ public class User {
             fetch = FetchType.LAZY,
             orphanRemoval = true)
     @BatchSize(size = 10)
-    private List<Task> tasks;
+    private List<Task> createdTasks;
+
+    @OneToMany(mappedBy = "owner", cascade = CascadeType.ALL, orphanRemoval = true)
+    private List<Workspace> ownedWorkspaces = new ArrayList<>();
+
+    @ManyToMany(mappedBy = "members")
+    private Set<Workspace> memberWorkspaces = new HashSet<>();
+
+    @ManyToMany(mappedBy = "assignees")
+    private Set<Task> assignedTasks = new HashSet<>();
+
+    @ElementCollection
+    @CollectionTable(name = "user_login_history", joinColumns = @JoinColumn(name = "user_id"))
+    @Column(name = "login_time")
+    private List<LocalDateTime> loginHistory;
 }

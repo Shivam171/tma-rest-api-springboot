@@ -3,6 +3,7 @@ package com.project.task_management_app.services;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.project.task_management_app.models.Task;
 import com.project.task_management_app.models.User;
+import com.project.task_management_app.models.Workspace;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
@@ -13,10 +14,7 @@ import org.springframework.security.core.userdetails.UserDetails;
 
 import java.io.Serial;
 import java.time.LocalDateTime;
-import java.util.Collection;
-import java.util.List;
-import java.util.Objects;
-import java.util.UUID;
+import java.util.*;
 
 @Getter
 @Setter
@@ -31,6 +29,9 @@ public class UserDetailsImpl implements UserDetails {
     private List<Task> tasks;
     private LocalDateTime createdAt;
     private LocalDateTime updatedAt;
+    private List<Workspace> ownedWorkspaces;
+    private Set<Workspace> memberWorkspaces;
+    private Set<Task> assignedTasks;
 
     @JsonIgnore
     private String password;
@@ -38,7 +39,7 @@ public class UserDetailsImpl implements UserDetails {
 
     public UserDetailsImpl(UUID id, String userImgUrl, String username, String email, String password,
                            Collection<? extends GrantedAuthority> authorities,
-                           List<Task> tasks, LocalDateTime createdAt, LocalDateTime updatedAt) {
+                           List<Task> tasks, LocalDateTime createdAt, LocalDateTime updatedAt, List<Workspace> ownedWorkspaces, Set<Workspace> memberWorkspaces, Set<Task> assignedTasks) {
         this.id = id;
         this.userImgUrl = userImgUrl;
         this.username = username;
@@ -48,6 +49,9 @@ public class UserDetailsImpl implements UserDetails {
         this.tasks = tasks;
         this.createdAt = createdAt;
         this.updatedAt = updatedAt;
+        this.ownedWorkspaces = ownedWorkspaces;
+        this.memberWorkspaces = memberWorkspaces;
+        this.assignedTasks = assignedTasks;
     }
 
     public static UserDetailsImpl build(User user) {
@@ -60,9 +64,12 @@ public class UserDetailsImpl implements UserDetails {
                 user.getEmail(),
                 user.getPassword(),
                 List.of(authority),
-                user.getTasks(),
+                user.getCreatedTasks(),
                 user.getCreatedAt(),
-                user.getUpdatedAt()
+                user.getUpdatedAt(),
+                user.getOwnedWorkspaces(),
+                user.getMemberWorkspaces(),
+                user.getAssignedTasks()
         );
     }
 

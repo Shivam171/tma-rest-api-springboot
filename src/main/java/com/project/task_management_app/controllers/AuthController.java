@@ -1,13 +1,16 @@
 package com.project.task_management_app.controllers;
 
 import com.project.task_management_app.enums.Role;
+import com.project.task_management_app.enums.WorkspaceType;
 import com.project.task_management_app.models.User;
+import com.project.task_management_app.models.Workspace;
 import com.project.task_management_app.payload.Request.SignInRequest;
 import com.project.task_management_app.payload.Request.SignUpRequest;
 import com.project.task_management_app.payload.Response.APIResponse;
 import com.project.task_management_app.payload.Response.JwtResponse;
 import com.project.task_management_app.payload.Response.UserResponse;
 import com.project.task_management_app.repositories.UserRepository;
+import com.project.task_management_app.repositories.WorkspaceRepository;
 import com.project.task_management_app.security.jwt.JwtUtils;
 import com.project.task_management_app.services.UserDetailsImpl;
 import io.swagger.v3.oas.annotations.Operation;
@@ -29,6 +32,8 @@ import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
 import java.time.LocalDateTime;
+import java.util.Set;
+import java.util.UUID;
 
 @CrossOrigin(origins = "*", maxAge = 3600)
 @RestController
@@ -42,6 +47,9 @@ public class AuthController {
 
     @Autowired
     UserRepository userRepository;
+
+    @Autowired
+    WorkspaceRepository workspaceRepository;
 
     @Autowired
     PasswordEncoder encoder;
@@ -138,6 +146,19 @@ public class AuthController {
         user.setUpdatedAt(LocalDateTime.now());
 
         user = userRepository.save(user);
+
+        // Create default workspace "Home"
+        Workspace homeWorkspace = new Workspace();
+        homeWorkspace.setName("Home");
+        homeWorkspace.setDescription("Your default workspace");
+        homeWorkspace.setOwner(user);
+        homeWorkspace.setMembers(Set.of(user));
+        homeWorkspace.setEntryCode(UUID.randomUUID().toString().substring(0, 6));
+        homeWorkspace.setType(WorkspaceType.DEFAULT);
+        homeWorkspace.setCreatedAt(LocalDateTime.now());
+        homeWorkspace.setUpdatedAt(LocalDateTime.now());
+
+        workspaceRepository.save(homeWorkspace);
 
         // Create user response
         UserResponse userResponse = new UserResponse(

@@ -3,9 +3,11 @@ package com.project.task_management_app.controllers;
 import com.project.task_management_app.models.User;
 import com.project.task_management_app.payload.Request.UpdateUserRequest;
 import com.project.task_management_app.payload.Response.APIResponse;
+import com.project.task_management_app.payload.Response.Dashboard.DashboardResponse;
 import com.project.task_management_app.payload.Response.UserResponse;
 import com.project.task_management_app.repositories.UserRepository;
 import com.project.task_management_app.services.UserDetailsImpl;
+import com.project.task_management_app.services.DashboardService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.tags.Tag;
@@ -27,10 +29,11 @@ import java.time.LocalDateTime;
 @CrossOrigin(origins = "*", maxAge = 3600)
 @RequiredArgsConstructor
 @Validated
-@Tag(name = "User Management", description = "APIs for managing users (No Admin specific APIs added yet).")
+@Tag(name = "User Management", description = "APIs for managing user details and dashboard data")
 public class UserController {
     private final UserRepository userRepository;
     private final PasswordEncoder passwordEncoder;
+    private final DashboardService dashboardService;
 
     // Get the currently logged-in user's details
     @GetMapping("/me")
@@ -121,6 +124,27 @@ public class UserController {
                 LocalDateTime.now().toString()
         );
 
+        return new ResponseEntity<>(response, HttpStatus.OK);
+    }
+
+    // Get user dashboard data
+    @GetMapping("/dashboard")
+    @Operation(summary = "Get user dashboard data", description = "Retrieve aggregated data and statistics for the user's dashboard")
+    @ApiResponse(responseCode = "200", description = "Successfully retrieved dashboard data")
+    @ApiResponse(responseCode = "401", description = "User not authenticated")
+    public ResponseEntity<APIResponse<DashboardResponse>> getUserDashboard(
+            @AuthenticationPrincipal UserDetailsImpl userDetails
+    ) {
+        DashboardResponse dashboardData = dashboardService.getUserDashboardData(userDetails);
+        APIResponse<DashboardResponse> response = new APIResponse<>(
+                dashboardData,
+                "Dashboard data retrieved successfully",
+                true,
+                HttpStatus.OK.value(),
+                "GET",
+                "/api/v1/users/dashboard",
+                LocalDateTime.now().toString()
+        );
         return new ResponseEntity<>(response, HttpStatus.OK);
     }
 }

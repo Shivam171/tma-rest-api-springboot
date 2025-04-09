@@ -13,6 +13,4 @@ public interface UserRepository extends JpaRepository<User, UUID> {
     Optional<User> findByUsername(String username);
     Boolean existsByUsername(String username);
     Boolean existsByEmail(String email);
-    @Query("SELECT u FROM User u LEFT JOIN FETCH u.tasks WHERE u.id = :id")
-    Optional<User> findUserWithTasks(@Param("id") UUID id);
 }

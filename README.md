@@ -1,4 +1,4 @@
-# Task Management App (Rest API)
+# NeuraTask - Backend (Rest API)
 
 Task Management App is a simple task management app that allows users to create, read, update, and delete tasks with secure authentication and pagination, sorting, and searching.
 
@@ -7,12 +7,13 @@ Task Management App is a simple task management app that allows users to create,
 
 ### 🔥 Features
 
-- Create, read, update, and delete tasks
-- Pagination, sorting and searching tasks
 - Best practices for REST API development
+- CRUD, pagination, sorting, searching and many one.
 - Spring Security with JWT for authentication
+- Multi-Factor Authentication (MFA) for added security
 - Secured API endpoints with proper error handling
-- Modular architecture (Controller, Service, Repository, etc.)
+- Caching/Eventing for improved performance
+- Collaborative Task Management
 
 ### ⚙️ Technologies
 

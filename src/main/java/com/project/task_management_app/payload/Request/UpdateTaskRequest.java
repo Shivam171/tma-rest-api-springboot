@@ -2,14 +2,14 @@ package com.project.task_management_app.payload.Request;
 
 import com.project.task_management_app.enums.TaskPriority;
 import com.project.task_management_app.enums.TaskStatus;
-import jakarta.validation.constraints.NotBlank;
-import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Size;
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 import lombok.Setter;
 
 import java.time.LocalDateTime;
+import java.util.Set;
+import java.util.UUID;
 
 @Getter
 @Setter
@@ -29,4 +29,6 @@ public class UpdateTaskRequest {
     private String attachmentUrl;
 
     private LocalDateTime dueDate;
+
+    private Set<UUID> assigneeIds;
 }
