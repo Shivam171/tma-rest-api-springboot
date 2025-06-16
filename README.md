@@ -1,6 +1,6 @@
 # NeuraTask - Backend (Rest API)
 
-Task Management App is a simple task management app that allows users to create, read, update, and delete tasks with secure authentication and pagination, sorting, and searching.
+NeuraTask is rest api for task management that allows users to create, read, update, and delete tasks with secure authentication and pagination, sorting, and searching.
 
 `Note`: In `src/main
 /resources` directory there is a `application.properties.example` file, rename it to `application.properties` and configure before running the application.
